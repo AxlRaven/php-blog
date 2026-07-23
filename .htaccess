@@ -1,0 +1,58 @@
+RewriteEngine On
+DirectoryIndex index.php
+
+# Hide index.php in the browser URL (/index.php → /)
+RewriteCond %{THE_REQUEST} \s/+(.*/)?index\.php[\s?] [NC]
+RewriteRule ^index\.php$ /%1 [R=301,L,QSA]
+
+# Protect sensitive paths
+RewriteRule ^config/ - [F,L]
+RewriteRule ^includes/ - [F,L]
+RewriteRule ^vendor/ - [F,L]
+RewriteRule ^admin/_ - [F,L]
+
+# Existing files/directories
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# SEO endpoints
+RewriteRule ^robots\.txt$ api/robots.php [L]
+RewriteRule ^sitemap\.xml$ api/sitemap.php [L]
+RewriteRule ^feed/?$ api/rss.php [L]
+RewriteRule ^rss\.xml$ api/rss.php [L]
+
+# Home / pagination
+RewriteRule ^page/([0-9]+)/?$ index.php?page=$1 [L,QSA]
+
+# Single post
+RewriteRule ^post/([a-zA-Z0-9\-]+)/?$ post.php?slug=$1 [L,QSA]
+
+# Search
+RewriteRule ^search/?$ search.php [L,QSA]
+
+# Tags list
+RewriteRule ^tags/?$ tag.php [L,QSA]
+
+# Tag feed + pagination
+RewriteRule ^tag/([a-zA-Z0-9\-]+)/page/([0-9]+)/?$ tag.php?slug=$1&page=$2 [L,QSA]
+RewriteRule ^tag/([a-zA-Z0-9\-]+)/?$ tag.php?slug=$1 [L,QSA]
+
+# Admin pretty URLs
+RewriteRule ^admin/?$ admin/index.php [L,QSA]
+RewriteRule ^admin/login-2fa/?$ admin/login-2fa.php [L,QSA]
+RewriteRule ^admin/login/?$ admin/login.php [L,QSA]
+RewriteRule ^admin/logout/?$ admin/logout.php [L,QSA]
+RewriteRule ^admin/posts/?$ admin/posts.php [L,QSA]
+RewriteRule ^admin/post/new/?$ admin/post-edit.php [L,QSA]
+RewriteRule ^admin/post/edit/([0-9]+)/?$ admin/post-edit.php?id=$1 [L,QSA]
+RewriteRule ^admin/settings/?$ admin/settings.php [L,QSA]
+RewriteRule ^admin/upload/?$ admin/upload.php [L,QSA]
+
+# Deny access to hidden/backup files
+<FilesMatch "(^\.|config\.php$|\.sql$|\.bak$|\.log$)">
+  Require all denied
+</FilesMatch>
+
+# Allow install.php and public entry points explicitly handled above
+Options -Indexes

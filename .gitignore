@@ -1,0 +1,23 @@
+# Secrets & local config
+/config/config.php
+
+# User uploads (keep structure only)
+/uploads/images/*
+!/uploads/images/.gitkeep
+!/uploads/images/thumbs/
+/uploads/images/thumbs/*
+!/uploads/images/thumbs/.gitkeep
+/uploads/files/*
+!/uploads/files/.gitkeep
+/uploads/totp/*
+!/uploads/totp/.htaccess
+!/uploads/totp/.gitkeep
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+.idea/
+.vscode/
+*.log
